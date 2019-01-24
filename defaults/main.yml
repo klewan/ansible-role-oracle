@@ -1,0 +1,52 @@
+---
+# defaults file for oracle common role
+
+# oracle OS user and group
+oracle_user: oracle
+oracle_oinstall_group: oinstall
+oracle_dba_group: dba
+
+# oracle nagios user
+oracle_nagios_user: nagios
+
+# scripts directory
+oracle_scripts_dir: /home/{{ oracle_user }}/scripts
+oracle_sql_scripts_dir: "{{ oracle_scripts_dir }}/sql"
+oracle_log_scripts_dir: "{{ oracle_scripts_dir }}/log"
+
+# facts directory
+oracle_facts_dir: "{{ oracle_scripts_dir }}/facts.d"
+
+# Grid Infrastructure info
+oracle_gi_info: '{{ oracle_gatherinfo_gi_gi_info|default({}, true) }}'
+
+# List describing the databases hosted on the servers
+oracle_databases: '{{ oracle_gatherinfo_databases_oracle_databases|default([], true) }}'
+
+# List describing Oracle listeners registered in GI OHAS
+oracle_registered_listeners: '{{ oracle_gatherinfo_listener_registered_listeners|default([], true) }}'
+
+# List describing active/running Oracle listeners
+oracle_running_listeners: '{{ oracle_gatherinfo_listener_running_listeners|default([], true) }}'
+
+# List describing db console services registered in GI OHAS
+oracle_dbconsole_registered_services: '{{ oracle_gatherinfo_dbconsole_registered_services|default([], true) }}'
+
+# List describing active/running db console services
+oracle_dbconsole_running_services: '{{ oracle_gatherinfo_dbconsole_running_services|default([], true) }}'
+
+# Default directory used for different non-database backups, such as ASM metadata, OCR registry backup, etc
+#   /u01/app/psu/backup         - for standalone installation
+#   /u01/app/oracle/psu/backup  - for RAC
+oracle_default_backup_dir: "{% if oracle_gi_info.rac_nodes|default('',true)|length == 0 %}/u01/app/psu/backup{% else %}/u01/app/oracle/psu/backup{% endif %}"
+
+# Default directory used for different log files
+#   /u01/app/psu/log            - for standalone installation
+#   /u01/app/oracle/psu/log     - for RAC 
+oracle_default_log_dir: "{% if oracle_gi_info.rac_nodes|default('',true)|length == 0 %}/u01/app/psu/log{% else %}/u01/app/oracle/psu/log{% endif %}"
+
+# Default directory used for installation files
+oracle_default_stage_install_dir: /u01/app/oracle/install
+
+# RMAN catalog connection string
+oracle_rmancat_connection_string: "rmancat/secret@RMANCAT"
